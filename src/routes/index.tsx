@@ -124,6 +124,19 @@ const routes: MyRoute[] = [
                 },
                 component: lazy(() => ExampleModule.get('List'))
             },
+            {
+                name: 'EXAMPLE_ERROR',
+                parent: 'EXAMPLE',
+                path: '/f/example/err',
+                isCache: true,
+                isTransition: true,
+                meta: {
+                    icon: 'BugOutlined',
+                    title: '报错页面',
+                    sort: 1
+                },
+                component: lazy(() => ExampleModule.get('ErrorTest'))
+            },
         ],
     }
 ]

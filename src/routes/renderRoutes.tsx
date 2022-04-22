@@ -22,6 +22,8 @@ export interface Meta {
     title: string,
 }
 
+export type MyRoute = CustRouteParam & RouteProps
+
 const ANIMATION_MAP = {
     PUSH: 'forward',
     POP: 'back',
@@ -61,8 +63,6 @@ function TransitionRoutes(props: any) {
 }
 
 export default withRouter(TransitionRoutes)
-
-export type MyRoute = CustRouteParam & RouteProps
 
 // 使用keepalive
 function withKeepAlive(render: (props: any) => React.ReactNode) {

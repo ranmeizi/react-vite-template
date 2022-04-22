@@ -6,21 +6,22 @@ vite 搭建的 react 开发平台
 因为用的是vite，dev模式使用的是modulejs可能有些浏览器不适配，不过build时添加了legacy适配ie11浏览器，不过这个项目的代码css没有适配ie11
 
 ## 开始
-使用 ```npm install``` 或者 ```yarn install``` 安装依赖  
-启动dev服务 ```npm run dev``` 或者 ```yarn dev```  
-build ```npm run build``` 或者 ```yarn build```  
-值得一提，在启动项目时，代码中会读取环境变量中的 NETWORK_ENV 去匹配不同环境的接口前缀
 
-需要注意！  
-因为vite是esmodule，在请求资源时才去读代码，没有找到很好的时机去lint代码，请手动运行```npm run lint``` 或者 ```yarn lint``` 去约束你的代码  
+使用 
+```npm install``` 
 
-如果需要执行测试js ```npm run test```或者```yarn test```
+或者 
+
+```yarn install``` 
+
+安装依赖  
 
 ## 技术栈
-React、Typescript、less、vite、jest
+React、Typescript、less、vite、jest、ant-design
 
 ## 目录结构
 \- build   viteconfig 文件  
+\- deploy   部署脚本  
 \- public   public文件夹  
 \-- images   图片资源  
 \-- mock    假数据json  
@@ -38,77 +39,76 @@ React、Typescript、less、vite、jest
 \-- views   页面(同步模块) 如果想拆分异步模块，请写到 chunks 里  
 \- test   单元测试文件
 
-## 基础搭建
-### 模块懒加载方案
-vite 没发现很好的模块命名和组合异步模块的方法(如果有可以改进一下，像webpack magic comment)   
-我们在 /chunks 目录下必须创建一个 index.tsx 作为这个模块的入口，里面的 Module 类中，有一个 **get 函数** 去获取 Module.tsx 中暴露的模块  
-在 Module.tsx 文件中定义需要暴露的模块  
-使用方法  
-```ts
-import Example from '@/chunks/Example'
+## 框架
+框架开发最多的是路由模块
+rvt 提供了拥有 **缓存(keepalive)** / **过度动画(transition)** / **权限(permission)** / **异常边界(Errorboundery)** / **异步(lazy)** 的路由
 
-const ExampleModule = new Example()
+换肤
+提供了 css 变量换肤 和 cssinjs 的 style 行内样式换肤的例子
 
-ExampleModule.get('List') // 获得暴露的List模块，其实是 import() 函数的返回值
+## 路由模块
+实现的非常耦合，好在都是基础不太用改，简单介绍一下
+### RouterView
+用到了这几个三方模块  
+
+使用 [react-router-dom](https://github.com/remix-run/react-router) 做 路由  
+使用 [react-activation](https://github.com/CJY0208/react-activation) 做 KeepAlive  
+使用 [react-transition-group](https://github.com/reactjs/react-transition-group) 做 Transition  
+
+组件结构
+```js
+// Transition 过度动画
+<TransitionGroup>
+    <CSSTransition>
+        {/* KeepAlive 路由缓存 */}
+        <KeepAlive>
+            {/* Suspense/lazy 异步路由模块 */}
+            <Suspense>
+                {/* ErrorBoundery 错误边界 */}
+                <ErrorBoundery>
+                    {/* Route 路由组件 */}
+                    <Route/>
+                        {/*
+                            props=><Page>
+                                .....页面开发
+                            </Page>
+                        */}
+                </ErrorBoundery>
+            </Suspense>
+        </KeepAlive>
+    </CSSTransition>
+<TransitionGroup/>
 ```
 
-### 换肤方案
-使用 less 变量和 cssinjs 2种方案换肤
-#### less
-根据 body 类名 ```rvt-body-???``` 引用 theme/ 变量文件
-#### cssinjs
-提供 makeStyles 函数构造一个 useStyle hook ,会传入一个theme变量作为调色板，theme变量在 theme/ 下的 js 文件中定义
-[makeStyles 函数](./src/theme/useThemeStyle.ts)
-```ts
-// 例子 怎样使用cssinjs theme
-const useStyle = makeStyles((theme) => ({
-    t1: {
-        color: theme.fc.text
-    },
-    t2: {
-        color: theme.fc.text
-    }
-}))
+规定 RouterView 组件，都使用 [Page](./src/components/Page/index.tsx) 组件作为根节点，这是因为 Page 组件需要在每次 route match 时，触发 Tab 组件的 ```PAGE_PUSH_TAB``` 事件
 
-function Logo({ collapsed }: any) {
-    const styles = useStyle()
-    return <div className='logo'>
-        <div className='t1' style={collapsed ? { fontSize: '12px', ...styles.t1 } : styles.t1}>{collapsed ? 'R' : 'React-Vite-Template'}</div>
-        <div className='t2' style={styles.t2}>{collapsed ? '' : 'boboan'}</div>
-        <div className='box2'>
-            <img src={backImg} className='avatar-back' />
-        </div>
-        <div className='box'>
-            <div className='avatar'></div>
-        </div>
-    </div >
+统一使用 Page 组件也可以很好的将 系统维护 和 迭代开发 拆分开
+
+#### RouterConfig 
+拓展了 Route 组件的 props ，详见 [MyRoute](./src/routes/renderRoutes.tsx)
+```ts
+interface CustRouteParam {
+    name?: string, // 唯一id
+    parent?: string, // 父id
+    meta?: Partial<Meta>, // meta 信息
+    isTransition?: boolean, // 是否需要过渡动画
+    isCache?: boolean, // 是否需要缓存
+    routes?: MyRoute[], // 普通路由
 }
 ```
-### 路由模块 
-路由模块使用了 [react-activation](https://github.com/CJY0208/react-activation) 做缓存， [react-transition-group](https://github.com/reactjs/react-transition-group) 做过渡动画  
-自定义了 routeConfig 见 [CustRouteParam](./src/routes/renderRoutes.tsx) 
-使用 isCache 控制路由组件是否需要缓存
-使用 isTransition 控制路由组件是否需要过度动画
 
-### 基础布局
-布局和 Page 组件
+### Tab 组件 和 LRU  
+[LRU(Least Recently Used)](./src/components/Header/LRU.ts)  
+lru.current type:MyRoute 最近一次访问的 route
+项目使用 lru 控制了  
+1. Tab 页的数量  
+2. KeepAlive 组件的缓存销毁  
 
-### tab签
-使用 tabs 控制 路由组件 react-activation 的缓存
-使用 TAB_LIMIT 控制最多展示多少 tab 页
-[Tab组件](./src/components/Header/Tab.tsx)
+使用 KeepAlive id 当作 lru 的 key
+lru.del 会清除掉对应 KeepAlive 缓存  
+Tab 组件的 api 操作 TapPane 数组时，所有删除操作都会调用 del，清除 lru 缓存
 
-### 示例页面
-使用 ant-design 风格  
-[工作台(首页)](./src/views/Homepage/index.tsx)
-[列表页](./src/chunks/Example/pages/Pokemon/List/index.tsx)
+### ErrorBoundery
 
-## history 路由
-使用history路由，不用锚点了，抓包软件抓不到hash
-但这对静态服务有些要求，在nginx 上需要设置 try_file 使请求路由地址时永远返回index.html
-
-## 避免使用context
-react-activation这个库改变组件层级，对context有所影响，不想再修补索性不用了，真的用的话可以去看作者写的解决方案自行解决
-
-## 别用require
-vite既然是esmodule实现的，为什要用commonjs的语法呢
+TODO  
+并没有记录 Error 信息，将捕获的异常准备放进 indexeddb，并提供一个查询上传页面
