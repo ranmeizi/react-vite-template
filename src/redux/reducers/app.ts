@@ -13,7 +13,8 @@ type AppState = {
   theme: "light" | "dark";
   uinfo: Partial<UInfo>;
   collapsed: boolean;
-  permission: string[]
+  permission: string[],
+  message: Record<string, number>
 };
 
 const initialState: AppState = {
@@ -24,7 +25,11 @@ const initialState: AppState = {
   /* 边栏隐藏 */
   collapsed: false,
   /* 权限列表 */
-  permission: []
+  permission: [],
+  /* 消息数量 */
+  message: {
+    HOMEPAGE: 9
+  }
 };
 
 export default function reducer(
@@ -57,6 +62,11 @@ export default function reducer(
         ...state,
         collapsed: action.data,
       };
+    case TYPES.SET_MESSAGE:
+      return {
+        ...state,
+        message: action.data
+      }
     default:
       return state;
   }

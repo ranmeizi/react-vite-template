@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react'
-import { useRouteMatch, match, useLocation } from 'react-router-dom'
+import { useRouteMatch, match } from 'react-router-dom'
 import { useActivate } from 'react-activation'
 import { BackTop } from 'antd';
 import { urlMap } from '../Menu/menuTree';
@@ -52,14 +52,13 @@ export default function Page({
 // 路由页向Tab组件传递事件
 export function useRouterPagePushTab() {
     const match = useRouteMatch()
-    const location = useLocation()
 
     useEffect(() => {
-        onPageIn(match, location.pathname + location.search)
+        onPageIn(match)
     }, [])
 
     useActivate(() => {
-        onPageIn(match, location.pathname + location.search)
+        onPageIn(match)
     })
 }
 
@@ -68,19 +67,19 @@ Page.useTabController = useTabController
 function useTabController() {
     const match = useRouteMatch()
     return {
-        closeCurrentPage: () => $EB.emit($EB.TYPES.PAGE_REMOVE_TAB, match?.path)
+        closeCurrentPage: () => $EB.emit($EB.TYPES.PAGE_REMOVE_TAB, match?.url)
     }
 }
 
-function onPageIn(match: match, id: string) {
+function onPageIn(match: match) {
 
     // 查找
     const route: MyRoute = urlMap.get(match?.path)
     // 消息
     $EB.emit($EB.TYPES.PAGE_PUSH_TAB, {
-        id,
-        name: route.name,
-        title: route.meta?.title || '未命名',
-        icon: route.meta?.icon || '',
+        id: match.url,
+        name: route?.name,
+        title: history.state.state?.title || route?.meta?.title || '未命名',
+        icon: route?.meta?.icon || '',
     })
 }

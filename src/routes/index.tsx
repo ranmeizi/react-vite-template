@@ -9,6 +9,7 @@ import { eachRoute } from '@/components/Menu/menuTree'
 import EPage403 from '@/views/ErrorPage/403'
 import EPage500 from '@/views/ErrorPage/500'
 import Homepage from '@/views/Homepage'
+import Login from '@/views/Login'
 
 const SystemModule = new System()
 const ExampleModule = new Example()
@@ -20,6 +21,11 @@ const routes: MyRoute[] = [
         path: '/',
         exact: true,
         render: () => <Redirect to='/f/sys/user' />
+    },
+    {
+        path: ['/login', '/login/:id'],
+        exact: true,
+        component: Login
     },
     {
         path: '/f',

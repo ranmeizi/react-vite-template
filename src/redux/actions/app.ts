@@ -41,3 +41,12 @@ export function setCollapsed(collapsed: boolean) {
     data: collapsed,
   };
 }
+
+// 设置全局消息
+export function setMessage(message: Record<string, number>) {
+  console.log(message)
+  return {
+    type: ACTION_TYPES.SET_MESSAGE,
+    data: message,
+  };
+} 

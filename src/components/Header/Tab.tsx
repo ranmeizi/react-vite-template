@@ -8,7 +8,6 @@ import { useAliveController } from 'react-activation'
 import * as Loading from '@/components/Loading'
 import config from '@/config'
 import $EB from '@/utils/EventBus'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 Sortable.mount(new MultiDrag(), new Swap());
 

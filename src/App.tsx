@@ -7,12 +7,15 @@ import { themeChange } from '@/theme/useThemeStyle'
 import config from '@/config'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
+import { useSelector } from 'react-redux'
 
 const style = {
   app: {
     height: '100vh'
   }
 }
+
+const configSelector = (state: any) => state.antConfig
 
 // useStyle初始化
 function themeInit() {
@@ -22,12 +25,15 @@ function themeInit() {
 }
 
 function App() {
+
+  const configProps = useSelector(configSelector)
+
   useEffect(() => {
     themeInit()
   }, [])
 
   return <div className='rvt-app' style={style.app}>
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider locale={zhCN} {...configProps}>
       <Router basename={config.routeBasename}>
         {
           renderRoutes(routes)

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import * as icons from '@ant-design/icons'
 import $EB from '@/utils/EventBus'
+import MenuTitleBadge from './MenuTitleBadge'
 
 const appSelector = (state: any) => state.app
 
@@ -52,7 +53,11 @@ export default function () {
                     icon={item.icon
                         ? React.createElement((icons[item.icon as keyof typeof icons] as React.ComponentType))
                         : null}
-                >{item.title}</Menu.Item>
+                >
+                    <MenuTitleBadge name={item.id}>
+                        {item.title}
+                    </MenuTitleBadge>
+                </Menu.Item>
         }
         )
     }
@@ -78,7 +83,12 @@ function useMenuController() {
     useEffect(() => {
         // 监听路由改变修改menu key
         function onPageIn({ name }: any) {
+            if (!name) {
+                // []数组路由，会搜索不到route，那么视为放弃 name 搜索
+                return
+            }
             setSelectedKeys([name])
+
             try {
                 setOpenKeys(findParentKeys(name) as string[])
             } catch (e) {
