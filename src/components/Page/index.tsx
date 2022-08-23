@@ -79,7 +79,7 @@ function onPageIn(match: match) {
     $EB.emit($EB.TYPES.PAGE_PUSH_TAB, {
         id: match.url,
         name: route?.name,
-        title: history.state.state?.title || route?.meta?.title || '未命名',
+        title: history.state?.state?.title || route?.meta?.title || '未命名',
         icon: route?.meta?.icon || '',
     })
 }
