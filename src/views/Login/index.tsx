@@ -11,7 +11,7 @@ const pics: any = {
     3: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190214%2Fa075a0eafdb546d7bf230debd3f54db5.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653549800&t=0a6a85845290ec3304b65752f4766b5e'
 }
 
-function fakeGet(id: string) {
+function fakeGet(id: string): Promise<{ url: string }> {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve({
@@ -19,10 +19,6 @@ function fakeGet(id: string) {
             })
         }, 2000);
     })
-}
-
-function preload(){
-    
 }
 
 /**
@@ -57,8 +53,7 @@ export default function () {
         }
     }, [config])
 
-    function onSubmit(data) {
-        console.log(data)
+    function onSubmit(data:any) {
         // 提示登录成功
         notification.open({
             message: '登录成功',
