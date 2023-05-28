@@ -3,7 +3,7 @@ import config from '@/config'
 import LoadingStack from '../LoadingStack'
 import { store } from '@/redux/store'
 
-const baseURL = config.realWorldServer
+const baseURL = config.bfjServer
 
 const instance = axios.create({
     baseURL: baseURL,

@@ -5,7 +5,7 @@ type Envs = "DEVELOP" | "TEST" | "UAT" | "RELEASE";
 
 // 服务地址列表
 type Configs = {
-  realWorldServer: "realworld 后台服务地址";
+  bfjServer: "bafojo 后台服务地址";
   testServer: "测试后台服务地址";
   routeBasename: "前端路由基地值";
 };
@@ -16,22 +16,22 @@ export type EnvConfig = Record<Envs, ConfigList>;
 
 const config: EnvConfig = {
   DEVELOP: {
-    realWorldServer: "https://api.realworld.io/api",
+    bfjServer: "http://127.0.0.1:3000",
     testServer: "试一下",
     routeBasename: "/",
   },
   TEST: {
-    realWorldServer: "https://conduit.productionready.io/api",
+    bfjServer: "http://127.0.0.1:3000",
     testServer: "试一下",
     routeBasename: "/",
   },
   UAT: {
-    realWorldServer: "https://conduit.productionready.io/api",
+    bfjServer: "http://127.0.0.1:3000",
     testServer: "试一下",
     routeBasename: "/",
   },
   RELEASE: {
-    realWorldServer: "https://conduit.productionready.io/api",
+    bfjServer: "http://127.0.0.1:3000",
     testServer: "试一下",
     routeBasename: "/",
   },
