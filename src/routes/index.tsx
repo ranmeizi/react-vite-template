@@ -8,7 +8,6 @@ import { Redirect } from 'react-router-dom'
 import { eachRoute } from '@/components/Menu/menuTree'
 import EPage403 from '@/views/ErrorPage/403'
 import EPage500 from '@/views/ErrorPage/500'
-import Qiankun from '@/views/Qiankun'
 import Login from '@/views/Login'
 import Homepage from '@/views/Homepage'
 
@@ -54,19 +53,6 @@ const routes: MyRoute[] = [
                     permission: '10001'
                 },
                 component: Homepage
-            },
-            {
-                name: 'Qiankun',
-                parent: 'root',
-                path: '/f/qiankun',
-                isTransition: true,
-                meta: {
-                    icon: 'Html5Outlined',
-                    title: '乾坤示例',
-                    sort: 1,
-                    permission: '10001'
-                },
-                component: Qiankun
             },
             {
                 name: 'SYSTEM',
