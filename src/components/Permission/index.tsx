@@ -33,7 +33,7 @@ export function withPermissionArea({
             }, [permissionList])
 
             // click拦截
-            const click = useCallback(function (this: any, ...args) {
+            const click = useCallback(function (this: any, ...args: any) {
                 if (!hasPermission) {
                     return alert(tips || '无权限')
                 }
