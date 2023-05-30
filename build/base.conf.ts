@@ -1,7 +1,6 @@
 import path from 'path'
 import autoprefixer from 'autoprefixer'
 import pxtorem from 'postcss-pxtorem'
-import usePluginImport from 'vite-plugin-importer'
 
 const postcssOpts = {
     ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
@@ -33,13 +32,6 @@ export default {
     define: {
         'process.env.NETWORK_ENV': JSON.stringify(process.env.NETWORK_ENV)
     },
-    plugins: [
-        usePluginImport({
-            libraryName: "antd",
-            libraryDirectory: "es",
-            style: true
-        })
-    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, "../src/")
