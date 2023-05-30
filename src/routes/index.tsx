@@ -14,8 +14,6 @@ import Homepage from '@/views/Homepage'
 const SystemModule = new System()
 const ExampleModule = new Example()
 
-// 嵌套路由都脑残。。
-
 const routes: MyRoute[] = [
     {
         path: '/',

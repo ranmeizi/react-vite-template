@@ -54,6 +54,11 @@ export default function () {
     });
   }
 
+  // 点击新增
+  function onAddNew() {
+    console.log("addnew")
+  }
+
   const columns: any[] = useMemo(() => {
     return getColumns({});
   }, []);
@@ -76,7 +81,7 @@ export default function () {
             <div>
               <Space>
                 <Button>导出</Button>
-                <Button type="primary">新建数据</Button>
+                <Button type="primary" onClick={onAddNew}>新建数据</Button>
               </Space>
               <Divider type="vertical" />
               <Space>
