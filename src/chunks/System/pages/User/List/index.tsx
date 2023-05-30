@@ -15,8 +15,10 @@ import SearchForm from "./SearchForm";
 import { usePagination, useRowSelection } from "@/utils/hooks/common";
 import { ExpandOutlined } from "@ant-design/icons";
 import { Params, DTO } from "@/services/system/type.d";
+import { useHistory } from "react-router-dom";
 
 export default function () {
+  const history = useHistory()
   // 表单
   const [form] = Form.useForm();
   const [full, setFull] = useState(false);
@@ -26,6 +28,8 @@ export default function () {
   const [pagination, setPagination, paginationProps] = usePagination();
   // 选择器
   const { selectionProps, showDetail, reset } = useRowSelection();
+
+  const { dropPage } = Page.useTabController()
 
   useEffect(() => {
     getData(1);
@@ -56,7 +60,8 @@ export default function () {
 
   // 点击新增
   function onAddNew() {
-    console.log("addnew")
+    history.push(`/f/sys/user/add`)
+    dropPage()
   }
 
   const columns: any[] = useMemo(() => {

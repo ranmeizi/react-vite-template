@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useRouteMatch, match } from 'react-router-dom'
-import { useActivate } from 'react-activation'
-import { BackTop } from 'antd';
+import { useActivate, useAliveController } from 'react-activation'
+import { BackTop, Modal } from 'antd';
 import { urlMap } from '../Menu/menuTree';
 import { MyRoute } from '@/routes/renderRoutes';
 import $EB from '@/utils/EventBus'
@@ -35,8 +35,6 @@ export default function Page({
         return () => el.current?.removeEventListener('scroll', onScroll)
     }, [])
 
-
-
     return <div className={cls}>
         <div className='page-shadow' />
         <BackTop target={() => el.current || window} />
@@ -64,22 +62,26 @@ export function useRouterPagePushTab() {
 
 Page.useTabController = useTabController
 
+// page 提供的 api hook
 function useTabController() {
     const match = useRouteMatch()
+    const { drop } = useAliveController()
     return {
-        closeCurrentPage: () => $EB.emit($EB.TYPES.PAGE_REMOVE_TAB, match?.url)
+        // 关闭本页面
+        closeCurrentPage: () => $EB.emit($EB.TYPES.PAGE_REMOVE_TAB, match?.url),
+        // 清除本页缓存(会重新创建组件)
+        dropPage: () => drop(match.url)
     }
 }
 
 function onPageIn(match: match) {
-
     // 查找
     const route: MyRoute = urlMap.get(match?.path)
     // 消息
     $EB.emit($EB.TYPES.PAGE_PUSH_TAB, {
         id: match.url,
         name: route?.name,
-        title: history.state?.state?.title || route?.meta?.title || '未命名',
+        title: history.state.state?.title || route?.meta?.title || '未命名',
         icon: route?.meta?.icon || '',
     })
 }
