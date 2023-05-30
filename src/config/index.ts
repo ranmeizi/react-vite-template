@@ -2,11 +2,13 @@ import env, { EnvConfig } from "./env";
 
 type Config = {
   TAB_LIMIT: string | number;
+  DEVELOP_MODE: boolean,
   HOME_PAGE: string
 };
 
 const config: Config = {
   TAB_LIMIT: 10,
+  DEVELOP_MODE: true,
   HOME_PAGE: '/f/homepage'
 };
 

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { useActivate } from 'react-activation'
+import config from "@/config";
 
 type PermissionAreaOptions = {
     /* 权限码 */
@@ -12,7 +13,13 @@ type PermissionAreaOptions = {
     tips?: string
 }
 
-const permissionSelector = (state: any) => state.app.permission
+const permissionSelector = (state: any) => {
+    try {
+        return state.app.uinfo.authorities[0].elemCodes.split(',')
+    } catch (e) {
+        return []
+    }
+}
 
 // 按钮点击权限
 export function withPermissionArea({
@@ -26,14 +33,13 @@ export function withPermissionArea({
             ref
         ) => {
             const permissionList: string[] = useSelector(permissionSelector)
-
             // 是否有权限
             const hasPermission = useMemo(() => {
                 return permissionList.includes(permission)
             }, [permissionList])
 
             // click拦截
-            const click = useCallback(function (this: any, ...args: any) {
+            const click = useCallback(function (this: any, ...args: any[]) {
                 if (!hasPermission) {
                     return alert(tips || '无权限')
                 }
@@ -43,6 +49,9 @@ export function withPermissionArea({
 
             // 是否显示元素
             const showEl = useMemo(() => {
+                if (config.DEVELOP_MODE) {
+                    return true
+                }
                 return show || hasPermission
             }, [hasPermission])
 
@@ -67,9 +76,11 @@ export function withPermissionRouter({
         return (props: any) => {
             const history = useHistory()
             const permissionList: string[] = useSelector(permissionSelector)
-
             // 是否有权限
             const hasPermission = useMemo(() => {
+                if (config.DEVELOP_MODE) {
+                    return true
+                }
                 return permissionList.includes(permission)
             }, [permissionList])
 
