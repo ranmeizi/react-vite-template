@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@types/sortablejs": "^1.10.7",
-    "antd": "^4.18.5",
+    "antd": "^5.5.2",
     "axios": "^0.21.1",
     "indexof": "^0.0.1",
     "qiankun": "^2.7.4",
@@ -48,7 +48,7 @@
     "less": "^4.1.1",
     "postcss-pxtorem": "^6.0.0",
     "typescript": "@4.3.2",
-    "vite": "^2.4.4",
+    "vite": "^4.3.9",
     "vite-plugin-importer": "^0.2.5"
   }
 }
