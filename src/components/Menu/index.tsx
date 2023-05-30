@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import * as icons from '@ant-design/icons'
 import $EB from '@/utils/EventBus'
 import MenuTitleBadge from './MenuTitleBadge'
+import config from '@/config'
 
 const appSelector = (state: any) => state.app
 
@@ -35,7 +36,7 @@ export default function () {
 
     const renderMenu = (menus: MenuItem[]) => {
         return menus.map(item => {
-            if (item.permission && !appState.permission.includes(item.permission)) {
+            if (!config.DEVELOP_MODE && item.permission && !appState.permission.includes(item.permission)) {
                 return null
             }
             return item.children.length > 0
