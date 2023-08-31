@@ -3,7 +3,6 @@ import * as TYPES from "../ACTION_TYPES";
 
 type UInfo = {
   email: string;
-  token: string;
   username: string;
   bio: string;
   image: string;
@@ -11,6 +10,7 @@ type UInfo = {
 
 type AppState = {
   theme: "light" | "dark";
+  token: string;
   uinfo: Partial<UInfo>;
   collapsed: boolean;
   permission: string[],
@@ -20,6 +20,8 @@ type AppState = {
 const initialState: AppState = {
   /* 主题 */
   theme: "dark",
+  /* token */
+  token: '',
   /* 用户信息 */
   uinfo: {},
   /* 边栏隐藏 */
@@ -41,6 +43,11 @@ export default function reducer(
       return {
         ...state,
         theme: action.data,
+      };
+    case TYPES.SET_TOKEN:
+      return {
+        ...state,
+        token: action.data,
       };
     case TYPES.SET_UINFO:
       return {

@@ -18,13 +18,13 @@ export default function ({
         form={form}
     >
         <Form.Item
-            name="username"
+            name="uname"
             rules={[{ required: true, message: 'Please input your Username!' }]}
         >
             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
         </Form.Item>
         <Form.Item
-            name="password"
+            name="psw"
             rules={[{ required: true, message: 'Please input your Password!' }]}
         >
             <Input

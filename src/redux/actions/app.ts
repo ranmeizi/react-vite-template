@@ -12,6 +12,14 @@ export function setTheme(theme: "light" | "dark") {
 }
 
 // 存放user信息
+export function setToken(token: string) {
+  return {
+    type: ACTION_TYPES.SET_TOKEN,
+    data: token,
+  };
+}
+
+// 存放user信息
 export function setUinfo(uinfo: any) {
   return {
     type: ACTION_TYPES.SET_UINFO,

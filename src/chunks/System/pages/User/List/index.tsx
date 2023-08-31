@@ -10,26 +10,27 @@ import {
   Divider,
   Pagination,
   TableColumnType,
+  Modal,
 } from "antd";
 import SearchForm from "./SearchForm";
 import { usePagination, useRowSelection } from "@/utils/hooks/common";
 import { ExpandOutlined } from "@ant-design/icons";
-import { Params, DTO } from "@/services/system/type.d";
 import { useHistory } from "react-router-dom";
+import * as API from "@/services/system/user";
 
 export default function () {
-  const history = useHistory()
+  const history = useHistory();
   // 表单
   const [form] = Form.useForm();
   const [full, setFull] = useState(false);
   // 表格数据 请按照类型替换 unknown ！
-  const [list, setList] = useState<DTO.User[]>([]);
+  const [list, setList] = useState<DTOs.User.UserDTO[]>([]);
   // 分页器
   const [pagination, setPagination, paginationProps] = usePagination();
   // 选择器
   const { selectionProps, showDetail, reset } = useRowSelection();
 
-  const { dropPage } = Page.useTabController()
+  const { dropPage } = Page.useTabController();
 
   useEffect(() => {
     getData(1);
@@ -42,17 +43,15 @@ export default function () {
   ) {
     // 获取查询条件
     const params = form.getFieldsValue();
-    const { list, ...page } = await Promise.resolve({
-      // 请求接口
-      list: [],
-      pageNumber: 1,
-      pageSize: 10,
-      total: 200,
+    const { record, ...page } = await API.query({
+      ...params,
+      page_num: pageNum,
+      page_size: pageSize,
     });
-    setList(list);
+    setList(record);
     reset();
     setPagination({
-      pageNum: page.pageNumber,
+      pageNum: page.current,
       pageSize: page.pageSize,
       total: page.total,
     });
@@ -60,12 +59,31 @@ export default function () {
 
   // 点击新增
   function onAddNew() {
-    history.push(`/f/sys/user/add`)
-    dropPage()
+    history.push(`/f/sys/user/add`);
+    dropPage();
+  }
+
+  function onDel(id: number) {
+    Modal.confirm({
+      title: "二次确认",
+      content: "确认要删除吗？",
+      onOk() {
+        API.deleteUserById({ id }).then((res) => {
+          res.data.code === 200 && getData(1);
+        });
+      },
+    });
+  }
+
+  function onEdit(id: number) {
+    history.push(`/f/sys/user/edit/${id}`);
   }
 
   const columns: any[] = useMemo(() => {
-    return getColumns({});
+    return getColumns({
+      onDel,
+      onEdit,
+    });
   }, []);
 
   return (
@@ -86,7 +104,9 @@ export default function () {
             <div>
               <Space>
                 <Button>导出</Button>
-                <Button type="primary" onClick={onAddNew}>新建数据</Button>
+                <Button type="primary" onClick={onAddNew}>
+                  新建数据
+                </Button>
               </Space>
               <Divider type="vertical" />
               <Space>
@@ -102,7 +122,7 @@ export default function () {
           rowKey="id"
           scroll={{ x: 1300 }}
           columns={columns}
-          dataSource={[]}
+          dataSource={list}
           pagination={false}
           rowSelection={selectionProps}
         />
@@ -125,18 +145,30 @@ export default function () {
 }
 
 // 传入上下文，获取表头配置
-function getColumns(ctx: any): TableColumnType<DTO.User>[] {
+function getColumns(ctx: any): TableColumnType<DTOs.User.UserDTO>[] {
   return [
-    { title: "Id", width: 120, dataIndex: "id" },
     { title: "用户名", width: 120, dataIndex: "uname" },
-    { title: "昵称", width: 120, dataIndex: "nickname" },
+    { title: "昵称", width: 240, dataIndex: "nickname" },
     { title: "性别", width: 120, dataIndex: "sex" },
-    { title: "手机号", width: 120, dataIndex: "mobile" },
-    { title: "邮箱", width: 120, dataIndex: "email" },
+    { title: "手机号", width: 180, dataIndex: "mobile" },
+    { title: "邮箱", width: 300, dataIndex: "email" },
     { title: "启用状态", width: 120, dataIndex: "enabled" },
-    { title: "创建时间", width: 120, dataIndex: "createdAt" },
-    { title: "创建人", width: 120, dataIndex: "createdAt" },
-    { title: "修改时间", width: 120, dataIndex: "updatedBy" },
-    { title: "修改人", width: 120, dataIndex: "updatedAt" },
+    { title: "创建时间", width: 300, dataIndex: "createdAt" },
+    { title: "创建人", width: 300, dataIndex: "createdAt" },
+    { title: "修改时间", width: 300, dataIndex: "updatedBy" },
+    { title: "修改人", width: 300, dataIndex: "updatedAt" },
+    {
+      title: "操作",
+      width: 180,
+      fixed: "right",
+      render(text, record, index) {
+        return (
+          <Space>
+            <a onClick={() => ctx.onEdit(record.id)}>编辑</a>
+            <a onClick={() => ctx.onDel(record.id)}>删除</a>
+          </Space>
+        );
+      },
+    },
   ];
 }

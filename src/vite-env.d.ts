@@ -57,12 +57,27 @@ type TabPane = {
   icon: string;
 };
 
+type LV = {
+  label: string,
+  value: string | number
+}
+
 declare namespace Res {
-  export type data<T> = Promise<T>;
-  export type page<T> = Promise<{
-    list: T[];
-    total: number;
+  export type data<T> = {
+    /** 状态码 */
+    code: number;
+    /** 信息 */
+    msg: string;
+    /** 用时 */
+    cost: string;
+    /** 结果 */
+    data: T;
+  }
+  export type page<T> = data<{
+    record: T[];
+    current: number;
     pageSize: number;
-    pageNumber: number;
+    total: number;
+    totalPages: number;
   }>;
 }

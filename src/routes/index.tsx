@@ -20,7 +20,7 @@ const routes: MyRoute[] = [
         render: () => <Redirect to='/f/sys/user' />
     },
     {
-        path: ['/login', '/login/:id'],
+        path: ['/login'],
         exact: true,
         component: Login
     },

@@ -15,8 +15,8 @@ instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
 
     // 是否应该携带token？
-    const token = store.getState().app.uinfo.token
-    token && (config.headers.authorization = `Token ${token}`)
+    const token = store.getState().app.token
+    token && (config.headers.authorization = `Bearer ${token}`)
 
     LoadingStack.whenRequest(config)
 
@@ -34,14 +34,14 @@ instance.interceptors.response.use(function (response) {
 
     if (response.status === 401) {
         // 跳登陆
-        location.href = '/account'
+        location.href = '/login'
     }
 
     return response;
 }, function (error) {
     if (error.response.status === 401) {
         // 跳登陆
-        location.href = '/account'
+        location.href = '/login'
     }
     // 对响应错误做点什么
     LoadingStack.whenResponse(error?.config)
