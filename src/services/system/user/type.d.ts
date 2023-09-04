@@ -45,7 +45,7 @@ declare namespace Params {
       /**
        * 用户id
        */
-      id: string;
+      id: number;
       /**
        * 手机号
        */
@@ -58,6 +58,17 @@ declare namespace Params {
        * 性别 1-男 2-女
        */
       sex?: string;
+    }
+
+    interface EnabledParams {
+      /**
+       * 启用状态
+       */
+      enabled: number;
+      /**
+       * ID
+       */
+      id: number;
     }
   }
 }

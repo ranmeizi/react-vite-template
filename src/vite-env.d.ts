@@ -58,9 +58,9 @@ type TabPane = {
 };
 
 type LV = {
-  label: string,
-  value: string | number
-}
+  label: string;
+  value: string | number;
+};
 
 declare namespace Res {
   export type data<T> = {
@@ -72,7 +72,7 @@ declare namespace Res {
     cost: string;
     /** 结果 */
     data: T;
-  }
+  };
   export type page<T> = data<{
     record: T[];
     current: number;
@@ -80,4 +80,14 @@ declare namespace Res {
     total: number;
     totalPages: number;
   }>;
+
+  export type CreateInfo = {
+    createdAt: string | null;
+    createdBy: string | null;
+  };
+
+  export type UpdateInfo = {
+    updatedAt: string | null;
+    updatedBy: string | null;
+  };
 }

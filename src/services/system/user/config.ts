@@ -8,3 +8,5 @@ export const createUrl = "/system/user/create";
 export const deleteByIdUrl = "/system/user/deleteById";
 /** 更新用户 */
 export const updateUrl = "/system/user/update";
+/** 修改用户启用状态 */
+export const enabledUserUrl = "/system/user/enabledUser";

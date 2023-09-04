@@ -31,3 +31,8 @@ export function deleteUserById(params: Params.User.FindByIdParams) {
 export function updateUser(params: Params.User.UpdateUserParams) {
   return axios.post<Res.data<DTOs.User.UserDTO>>(URLs.updateUrl, params);
 }
+
+/** 修改用户启用状态 */
+export function enabledUser(params: Params.User.EnabledParams) {
+  return axios.post<Res.data<DTOs.User.UserDTO>>(URLs.enabledUserUrl, params);
+}

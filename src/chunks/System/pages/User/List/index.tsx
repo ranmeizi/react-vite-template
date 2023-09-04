@@ -11,12 +11,14 @@ import {
   Pagination,
   TableColumnType,
   Modal,
+  message,
 } from "antd";
 import SearchForm from "./SearchForm";
 import { usePagination, useRowSelection } from "@/utils/hooks/common";
 import { ExpandOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import * as API from "@/services/system/user";
+import * as Formatter from "@/utils/Formatter";
 
 export default function () {
   const history = useHistory();
@@ -79,10 +81,25 @@ export default function () {
     history.push(`/f/sys/user/edit/${id}`);
   }
 
+  function onEnabledChange(id: number, enabled: boolean) {
+    API.enabledUser({
+      id: id,
+      enabled: enabled ? 1 : 0,
+    }).then((res) => {
+      if (res.data.code === 200) {
+        message.success("修改成功");
+        getData(1);
+      } else {
+        message.error(res.data.msg);
+      }
+    });
+  }
+
   const columns: any[] = useMemo(() => {
     return getColumns({
       onDel,
       onEdit,
+      onEnabledChange,
     });
   }, []);
 
@@ -148,15 +165,20 @@ export default function () {
 function getColumns(ctx: any): TableColumnType<DTOs.User.UserDTO>[] {
   return [
     { title: "用户名", width: 120, dataIndex: "uname" },
-    { title: "昵称", width: 240, dataIndex: "nickname" },
-    { title: "性别", width: 120, dataIndex: "sex" },
+    { title: "用户姓名", width: 240, dataIndex: "nickname" },
+    { title: "性别", width: 120, dataIndex: "sex", render: Formatter.sex },
     { title: "手机号", width: 180, dataIndex: "mobile" },
     { title: "邮箱", width: 300, dataIndex: "email" },
-    { title: "启用状态", width: 120, dataIndex: "enabled" },
+    {
+      title: "启用状态",
+      width: 120,
+      dataIndex: "enabled",
+      render: Formatter.enabled,
+    },
     { title: "创建时间", width: 300, dataIndex: "createdAt" },
-    { title: "创建人", width: 300, dataIndex: "createdAt" },
-    { title: "修改时间", width: 300, dataIndex: "updatedBy" },
-    { title: "修改人", width: 300, dataIndex: "updatedAt" },
+    { title: "创建人ID", width: 300, dataIndex: "createdBy" },
+    { title: "修改时间", width: 300, dataIndex: "updatedAt" },
+    { title: "修改人ID", width: 300, dataIndex: "updatedBy" },
     {
       title: "操作",
       width: 180,
@@ -165,6 +187,9 @@ function getColumns(ctx: any): TableColumnType<DTOs.User.UserDTO>[] {
         return (
           <Space>
             <a onClick={() => ctx.onEdit(record.id)}>编辑</a>
+            <a onClick={() => ctx.onEnabledChange(record.id, !record.enabled)}>
+              {record.enabled ? "禁用" : "启用"}
+            </a>
             <a onClick={() => ctx.onDel(record.id)}>删除</a>
           </Space>
         );

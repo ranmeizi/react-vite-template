@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Page from "@/components/Page";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import Myform from "./Form";
 import * as API from "@/services/system/user";
 import { useParams } from "react-router-dom";
@@ -23,15 +23,49 @@ export default function () {
   }
 
   async function onSubmit() {
-    const data = await form.validateFields();
+    try {
+      const data = await form.validateFields();
 
-    console.log(data);
+      const action = id
+        ? API.updateUser({
+            id: Number(id),
+            email: data.email,
+            mobile: data.mobile,
+            nickname: data.nickname,
+            sex: data.sex,
+          })
+        : API.createUser({
+            uname: data.uname,
+            email: data.email,
+            mobile: data.mobile,
+            nickname: data.nickname,
+            sex: data.sex,
+          });
+
+      action.then((res) => {
+        if (res.data.code === 200) {
+          message.success("修改成功");
+          closeCurrentPage();
+        } else {
+          message.error(res.data.msg);
+        }
+      });
+
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
     <Page>
       {/* 内容 */}
-      <Myform form={form} onSubmit={onSubmit} onClose={closeCurrentPage} />
+      <Myform
+        form={form}
+        onSubmit={onSubmit}
+        onClose={closeCurrentPage}
+        isEdit={id !== undefined}
+      />
     </Page>
   );
 }

@@ -69,7 +69,7 @@ export default function ({
               <Input />
             </Form.Item>
           </Col>
-          <Col span={6} offset={2}>
+          <Col span={6}>
             <Form.Item
               {...layout}
               label="用户手机"
@@ -79,21 +79,17 @@ export default function ({
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8} />
-          <Col span={6} offset={2}>
+          <Col span={6}>
             <Form.Item
               {...layout}
-              label="用户状态"
-              name="enabled"
-              initialValue={1}
-              rules={[{ required: true, message: "请选择用户状态!" }]}
+              label="邮箱"
+              name="email"
+              rules={[{ max: 100, message: "邮箱最多100字!" }]}
             >
-              <Radio.Group>
-                <Radio value={true}>启用</Radio>
-                <Radio value={false}>禁用</Radio>
-              </Radio.Group>
+              <Input />
             </Form.Item>
           </Col>
+          <Col span={8} />
         </Row>
       </Card>
       <Typography.Title className="mt-16" level={5} id="role-rolelist">
@@ -109,7 +105,7 @@ export default function ({
               span: 18,
             }}
             label="用户角色"
-            rules={[{ required: true, message: "请选择用户角色!" }]}
+            // rules={[{ required: true, message: "请选择用户角色!" }]}
             initialValue={[]}
             name="roleIds"
           >

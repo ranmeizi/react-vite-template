@@ -24,7 +24,7 @@ const routes: MyRoute[] = [
     isTransition: true,
     meta: {
       icon: "UserOutlined",
-      title: "用户管理",
+      title: "User",
       sort: 3,
       permission: "USER",
     },
@@ -61,7 +61,7 @@ const routes: MyRoute[] = [
     isTransition: true,
     meta: {
       icon: "ApartmentOutlined",
-      title: "角色管理",
+      title: "Role",
       sort: 4,
       permission: "ROLE",
     },
@@ -98,7 +98,7 @@ const routes: MyRoute[] = [
     isTransition: true,
     meta: {
       icon: "WarningOutlined",
-      title: "不要改数据",
+      title: "Resource",
       sort: 4,
     },
     component: lazy(() => SystemModule.get("ResourceConfig")),
